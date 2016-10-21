@@ -1,6 +1,11 @@
 var util = require('util');
 var	config = require('config');
 
+require('debug-trace')({
+	always: true,
+	methods: config.global.trackConsoleMethods
+});
+
 function AsmiService(modName) {
 	var root = this;
 
