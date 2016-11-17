@@ -1,5 +1,6 @@
 var util = require('util');
 var	config = require('config');
+var serviceCache = {};
 
 require('debug-trace')({
 	always: true,
@@ -7,6 +8,11 @@ require('debug-trace')({
 });
 
 function AsmiService(modName) {
+}
+
+var p = AsmiService.prototype;
+
+p.initService = function (modName) {
 	var root = this;
 
 	this.conf = config.modules[modName] || {};
@@ -21,22 +27,21 @@ function AsmiService(modName) {
 		protocol = "direct";
 	}
 
-	protocolServer = require('asmi-protocol-' + protocol)(modName);
-	protocolServer.initServer(this);
-}
-
-var p = AsmiService.prototype;
-
-p.getInstanceID = function () {
-	return this.instanceID;
+	protocolServer = require('asmi-protocol-' + protocol)(modName, this);
 };
 
 // properties not declared on prototype (var x) will behave like static variables, so sub classes of this class will have these as static variables
 p.conf = null;
 p.modName = null;
 p.mod = null;
-p.instanceID = null;
 
 module.exports = exports = function (modpath) {
-	return new AsmiService(modpath);
+	if (serviceCache[modpath]) {
+		return serviceCache[modpath];
+	} else {
+		var svc = new AsmiService(modpath);
+		serviceCache[modpath] = svc;
+		svc.initService(modpath);
+		return svc;
+	}
 };
