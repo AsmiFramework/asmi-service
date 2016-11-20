@@ -17,7 +17,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "config": "^1.21.0",
-    "debug-trace": "^2.0.0"
+    "config": "^1.21.0"
   }
 }
