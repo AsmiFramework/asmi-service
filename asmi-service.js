@@ -2,11 +2,6 @@ var util = require('util');
 var	config = require('config');
 var serviceCache = {};
 
-require('debug-trace')({
-	always: true,
-	methods: config.global.trackConsoleMethods
-});
-
 function AsmiService(modName) {
 }
 
